@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>petproject031</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6200ea;
+            --secondary-color: #03dac6;
+            --dark-color: #121212;
+            --light-color: #f5f5f5;
+            --accent-color: #ff4081;
+            --text-primary: #333;
+            --text-secondary: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--dark-color);
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            border-bottom: 5px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(98, 0, 234, 0.5) 0%, transparent 70%),
+                radial-gradient(circle at 70% 30%, rgba(3, 218, 198, 0.5) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+
+        .header-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--accent-color);
+            bottom: -10px;
+            left: 25%;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin: 40px 0 20px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            color: var(--dark-color);
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .nav-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .nav-pill {
+            padding: 10px 20px;
+            background: var(--light-color);
+            color: var(--primary-color);
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-pill.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-pill:hover:not(.active) {
+            background: #e0e0e0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .highlight {
+            background: rgba(3, 218, 198, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .accordion {
+            margin: 20px 0;
+        }
+
+        .accordion-item {
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .accordion-header {
+            background: var(--light-color);
+            color: var(--primary-color);
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion-header:hover {
+            background: #e0e0e0;
+        }
+
+        .accordion-content {
+            background: white;
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-content-inner {
+            padding: 20px 0;
+        }
+
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .dark-theme {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+            color: #f5f5f5;
+        }
+
+        .dark-theme .card {
+            background: #2d3748;
+            color: #f5f5f5;
+        }
+
+        .dark-theme h2 {
+            color: var(--secondary-color);
+        }
+
+        .dark-theme h3 {
+            color: var(--accent-color);
+        }
+
+        .dark-theme .accordion-header {
+            background: #2d3748;
+            color: var(--secondary-color);
+        }
+
+        .dark-theme .accordion-content {
+            background: #1a202c;
+        }
+
+        .dark-theme .nav-pill {
+            background: #2d3748;
+            color: var(--secondary-color);
+        }
+
+        .dark-theme .nav-pill.active {
+            background: var(--secondary-color);
+            color: var(--dark-color);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .quote {
+            font-style: italic;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        thead th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .dark-theme tr:nth-child(even) {
+            background-color: #334155;
+        }
+
+        .dark-theme th, .dark-theme td {
+            border-bottom: 1px solid #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>Approaches to Reasoning with Inconsistency</h1>
+            <p>Exploring logical frameworks that can handle contradictory information</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Introduction to Inconsistency in Reasoning</h2>
+            <p>Traditional logical systems break down in the face of contradictions. When faced with inconsistent information, classical logic allows us to derive any conclusion whatsoever—a principle known as <span class="highlight">ex falso quodlibet</span> or "from falsehood, anything follows." However, in real-world scenarios, we regularly encounter inconsistent information and still need to reason productively with it.</p>
+            
+            <p>This website explores various approaches that have been developed to reason in the presence of inconsistency, from paraconsistent logics to belief revision theories and beyond.</p>
+            
+            <div class="quote">
+                "A theory that contains a contradiction is trivial. A person whose beliefs contain a contradiction has some rethinking to do." — Graham Priest
+            </div>
+        </div>
+
+        <div class="nav-pills" id="approach-tabs">
+            <div class="nav-pill active" data-tab="paraconsistent">Paraconsistent Logic</div>
+            <div class="nav-pill" data-tab="belief-revision">Belief Revision</div>
+            <div class="nav-pill" data-tab="defeasible">Defeasible Reasoning</div>
+            <div class="nav-pill" data-tab="inconsistency-measure">Inconsistency Measures</div>
+        </div>
+
+        <div class="tab-content active" id="paraconsistent">
+            <div class="card">
+                <h2>Paraconsistent Logic</h2>
+                <p>Paraconsistent logics reject the principle of explosion while maintaining other desirable properties of logical reasoning. These logics allow contradictions to be contained without trivializing the entire system.</p>
+                
+                <h3>Key Approaches in Paraconsistent Logic</h3>
+                
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Relevant Logic</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>Relevant logics require that premises and conclusions share relevant content. This prevents arbitrary conclusions from following contradictions, as they would lack relevance to the premises.</p>
+                                <p>They typically reject the disjunctive syllogism (from A and not-A-or-B, derive B), which is a key step in the derivation of arbitrary conclusions from contradictions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Dialetheism</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>Dialetheism is the view that some contradictions are true. Proponents like Graham Priest argue that certain paradoxes (e.g., the Liar Paradox) are genuine true contradictions.</p>
+                                <p>Dialetheism typically employs a paraconsistent logic like LP (Logic of Paradox) that allows contradictions without triviality.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Many-Valued Logics</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>Many-valued logics introduce additional truth values beyond "true" and "false." For instance, propositions might be assigned values like "both true and false" or "neither true nor false."</p>
+                                <p>This allows for a more nuanced treatment of contradictions, preventing the principle of explosion while maintaining other desirable logical principles.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="belief-revision">
+            <div class="card">
+                <h2>Belief Revision Theory</h2>
+                <p>Belief revision theories address how agents should modify their beliefs when faced with new, potentially contradictory information. These approaches aim to maintain consistency by deciding which beliefs to keep and which to discard.</p>
+                
+                <h3>AGM Framework</h3>
+                <p>The AGM framework (named after its creators Alchourrón, Gärdenfors, and Makinson) is the most influential approach to belief revision. It models belief states as sets of propositions and defines three types of operations:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Description</th>
+                            <th>Formal Notation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Expansion</td>
+                            <td>Adding new information without checking for consistency</td>
+                            <td>K + α</td>
+                        </tr>
+                        <tr>
+                            <td>Revision</td>
+                            <td>Adding new information while ensuring consistency</td>
+                            <td>K * α</td>
+                        </tr>
+                        <tr>
+                            <td>Contraction</td>
+                            <td>Removing information from the belief set</td>
+                            <td>K − α</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Principles of Minimal Change</h3>
+                <p>Most belief revision theories adhere to principles of minimal change, which stipulate that agents should retain as much of their original beliefs as possible when accommodating new information. Various measures of minimality have been proposed:</p>
+                
+                <ul style="list-style-type: none; padding-left: 20px;">
+                    <li>• Retention of core beliefs</li>
+                    <li>• Minimizing the number of beliefs changed</li>
+                    <li>• Preserving the explanatory power of the belief system</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tab-content" id="defeasible">
+            <div class="card">
+                <h2>Defeasible Reasoning</h2>
+                <p>Defeasible reasoning acknowledges that conclusions drawn from premises may be withdrawn in light of additional information. This approach is particularly useful for handling inconsistency in practical reasoning contexts.</p>
+                
+                <h3>Default Logic</h3>
+                <p>Developed by Raymond Reiter, default logic extends classical logic with default rules of the form "typically, if A then B." These rules allow for tentative conclusions that can be retracted if contrary evidence emerges.</p>
+                
+                <h3>Argumentation Frameworks</h3>
+                <p>Argumentation frameworks model reasoning as a process of constructing, attacking, and defending arguments. When inconsistencies arise, they are represented as conflicts between arguments, and various semantics determine which arguments (and thus which conclusions) should be accepted.</p>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3>Dung's Abstract Argumentation Framework</h3>
+                        <p>A foundational approach that represents arguments as abstract entities and defines attack relations between them. Various semantics (grounded, preferred, stable) determine which sets of arguments can be consistently accepted.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Preference-Based Argumentation</h3>
+                        <p>Extends abstract argumentation with preferences between arguments, allowing for more nuanced resolution of conflicts based on the relative strength or reliability of arguments.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="inconsistency-measure">
+            <div class="card">
+                <h2>Inconsistency Measures</h2>
+                <p>Inconsistency measures quantify the degree of inconsistency in a knowledge base. These measures can guide strategies for resolving inconsistencies by identifying the most problematic components.</p>
+                
+                <h3>Types of Inconsistency Measures</h3>
+                
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Minimal Inconsistent Subsets</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>A common approach identifies minimal inconsistent subsets (MIS) of a knowledge base—the smallest sets of formulas that are inconsistent. The number or size of these sets can be used to measure inconsistency.</p>
+                                <p>Example: In a knowledge base {A, B, A→¬B, C}, the set {A, B, A→¬B} is a minimal inconsistent subset.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Probabilistic Inconsistency Measures</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>Probabilistic approaches measure how far a knowledge base is from admitting a probability distribution. A consistent knowledge base admits at least one probability distribution, while inconsistent ones admit none.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Information-Theoretic Measures</span>
+                            <span class="toggle">+</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <p>Based on concepts from information theory, these measures quantify inconsistency in terms of the information content of a knowledge base and how it changes when inconsistencies are resolved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Applications of Inconsistency Measures</h3>
+                <p>Inconsistency measures have practical applications in database merging, belief revision strategies, and inconsistency-tolerant reasoning. They help in prioritizing which inconsistencies to address first and how to distribute the "blame" for inconsistencies across different parts of a knowledge base.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Practical Applications</h2>
+            <p>Reasoning with inconsistency is not merely a theoretical concern. It has practical applications across numerous domains:</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Database Management</h3>
+                    <p>Databases often contain inconsistent information due to integration from multiple sources or changes over time. Inconsistency-tolerant query answering techniques allow useful information to be extracted despite these inconsistencies.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Legal Reasoning</h3>
+                    <p>Legal systems contain contradictory rules and principles. Approaches like defeasible reasoning help model how legal experts navigate these inconsistencies to reach justified conclusions.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Artificial Intelligence</h3>
+                    <p>AI systems must reason with incomplete and contradictory information. Techniques for handling inconsistency enable more robust decision-making in uncertain environments.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Future Directions</h2>
+            <p>Research on reasoning with inconsistency continues to evolve. Some promising directions include:</p>
+            
+            <ul style="list-style-type: none; padding-left: 20px;">
+                <li>• Integration of different approaches, such as combining paraconsistent logics with belief revision theories</li>
+                <li>• Development of more sophisticated inconsistency measures that capture contextual aspects of inconsistency</li>
+                <li>• Applications to emerging fields like explainable AI and automated reasoning in multi-agent systems</li>
+                <li>• Cognitive models of how humans actually reason with inconsistent information</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Approaches to Reasoning with Inconsistency</p>
+            <p>A resource for philosophers, logicians, computer scientists, and anyone interested in the challenges of reasoning with inconsistent information.</p>
+        </div>
+    </footer>
+
+    <button class="theme-toggle" id="theme-toggle">🌙</button>
+
+    <script>
+        $(document).ready(function() {
+            // Tab navigation
+            $('.nav-pill').click(function() {
+                $('.nav-pill').removeClass('active');
+                $(this).addClass('active');
+                
+                const tabId = $(this).data('tab');
+                $('.tab-content').removeClass('active');
+                $('#' + tabId).addClass('active');
+            });
+            
+            // Accordion functionality
+            $('.accordion-header').click(function() {
+                const content = $(this).next('.accordion-content');
+                const allContents = $('.accordion-content');
+                
+                if (content.css('max-height') === '0px' || content.css('max-height') === '0' || content.css('max-height') === 'none') {
+                    allContents.css('max-height', '0');
+                    $('.toggle').text('+');
+                    content.css('max-height', content[0].scrollHeight + 'px');
+                    $(this).find('.toggle').text('-');
+                } else {
+                    content.css('max-height', '0');
+                    $(this).find('.toggle').text('+');
+                }
+            });
+            
+            // Theme toggle
+            $('#theme-toggle').click(function() {
+                $('body').toggleClass('dark-theme');
+                
+                if ($('body').hasClass('dark-theme')) {
+                    $(this).text('☀️');
+                } else {
+                    $(this).text('🌙');
+                }
+            });
+
+            // Handle window resize for accordions
+            $(window).resize(function() {
+                $('.accordion-content').each(function() {
+                    if ($(this).css('max-height') !== '0px' && $(this).css('max-height') !== '0' && $(this).css('max-height') !== 'none') {
+                        $(this).css('max-height', $(this)[0].scrollHeight + 'px');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
